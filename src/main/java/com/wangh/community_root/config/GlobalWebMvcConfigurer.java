@@ -8,6 +8,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+// 解决前后端跨域问题
 @Configuration
 public class GlobalWebMvcConfigurer implements WebMvcConfigurer{
     @Override
