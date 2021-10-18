@@ -8,11 +8,14 @@ import com.wangh.community_root.jwt.JwtUtil;
 import com.wangh.community_root.mapper.UmsUserMapper;
 import com.wangh.community_root.model.dto.LoginDTO;
 import com.wangh.community_root.model.dto.RegisterDTO;
+import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.UmsUser;
+import com.wangh.community_root.model.vo.ProfileVO;
 import com.wangh.community_root.service.UmsUserService;
 import com.wangh.community_root.utils.MD5Utils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -66,5 +69,21 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
                 new LambdaQueryWrapper<UmsUser>().eq(UmsUser::getUsername, username)
         );
         return user;
+    }
+
+    @Override
+    public ProfileVO getUserProfile(String id) {
+        ProfileVO profile = new ProfileVO();
+        UmsUser user = baseMapper.selectById(id);
+        BeanUtils.copyProperties(user, profile);
+//        // 用户文章数
+//        int count = bmsTopicMapper.selectCount(new LambdaQueryWrapper<BmsPost>().eq(BmsPost::getUserId, id));
+//        profile.setTopicCount(count);
+//
+//        // 粉丝数
+//        int followers = bmsFollowMapper.selectCount((new LambdaQueryWrapper<BmsFollow>().eq(BmsFollow::getParentId, id)));
+//        profile.setFollowerCount(followers);
+
+        return profile;
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangh.community_root.model.dto.LoginDTO;
 import com.wangh.community_root.model.dto.RegisterDTO;
 import com.wangh.community_root.model.entity.UmsUser;
+import com.wangh.community_root.model.vo.ProfileVO;
 
 public interface UmsUserService extends IService<UmsUser> {
 
@@ -28,4 +29,12 @@ public interface UmsUserService extends IService<UmsUser> {
      * @return dbUser
      */
     UmsUser getUserByUsername(String username);
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 用户ID
+     * @return
+     */
+    ProfileVO getUserProfile(String id);
 }

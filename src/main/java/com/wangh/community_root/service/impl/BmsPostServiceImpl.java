@@ -2,6 +2,7 @@ package com.wangh.community_root.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,16 +16,17 @@ import com.wangh.community_root.model.entity.BmsTag;
 import com.wangh.community_root.model.entity.BmsTopicTag;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.PostVO;
+import com.wangh.community_root.model.vo.ProfileVO;
 import com.wangh.community_root.service.BmsPostService;
 import com.wangh.community_root.service.BmsTagService;
 import com.wangh.community_root.service.BmsTopicTagService;
+import com.wangh.community_root.service.UmsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,9 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
 
     @Autowired
     private UmsUserMapper umsUserMapper;
+
+    @Autowired
+    private UmsUserService umsUserService;
 
     @Autowired
     private BmsTagService bmsTagService;
@@ -79,6 +84,35 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
         }
 
         return topic;
+    }
+
+    @Override
+    public Map<String, Object> viewTopic(String id) {
+        Map<String, Object> map = new HashMap<>(16);
+        BmsPost topic = this.baseMapper.selectById(id);
+        Assert.notNull(topic, "当前话题不存在,或已被作者删除");
+        // 查询话题详情
+        topic.setView(topic.getView() + 1);
+        this.baseMapper.updateById(topic);
+        // emoji转码
+        topic.setContent(EmojiParser.parseToUnicode(topic.getContent()));
+        map.put("topic", topic);
+        // 标签
+        QueryWrapper<BmsTopicTag> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(BmsTopicTag::getTopicId, topic.getId());
+        Set<String> set = new HashSet<>();
+        for (BmsTopicTag articleTag : bmsTopicTagService.list(wrapper)) {
+            set.add(articleTag.getTagId());
+        }
+        List<BmsTag> tags = bmsTagService.listByIds(set);
+        map.put("tags", tags);
+
+        // 作者
+
+        ProfileVO user = umsUserService.getUserProfile(topic.getUserId());
+        map.put("user", user);
+
+        return map;
     }
 
     private void setTopicTags(Page<PostVO> iPage) {

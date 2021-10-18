@@ -7,6 +7,8 @@ import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.PostVO;
 
+import java.util.Map;
+
 public interface BmsPostService extends IService<BmsPost> {
 
     /**
@@ -26,4 +28,12 @@ public interface BmsPostService extends IService<BmsPost> {
      * @return
      */
     BmsPost create(CreateTopicDTO dto, UmsUser principal);
+
+    /**
+     * 查看梯子详情
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> viewTopic(String id);
 }

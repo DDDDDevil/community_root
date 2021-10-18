@@ -11,6 +11,8 @@ import com.wangh.community_root.service.UmsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static com.wangh.community_root.jwt.JwtUtil.USER_NAME;
 
 @RestController
@@ -43,6 +45,12 @@ public class BmsPostController extends BaseController {
         UmsUser user = umsUserService.getUserByUsername(userName);
         BmsPost topic = bmsPostService.create(dto, user);
         return ApiResult.success(topic);
+    }
+
+    @GetMapping()
+    public ApiResult<Map<String, Object>> view(@RequestParam("id") String id) {
+        Map<String, Object> map = bmsPostService.viewTopic(id);
+        return ApiResult.success(map);
     }
 
 }
