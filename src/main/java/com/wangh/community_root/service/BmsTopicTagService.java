@@ -16,4 +16,21 @@ public interface BmsTopicTagService extends IService<BmsTopicTag> {
      * @return
      */
     List<BmsTopicTag> selectByTopicId(String topicId);
+
+    /**
+     * 创建中间关系
+     *
+     * @param id
+     * @param tags
+     * @return
+     */
+    void createTopicTag(String id, List<BmsTag> tags);
+
+    /**
+     * 获取标签换脸话题ID集合
+     *
+     * @param id
+     * @return
+     */
+    Set<String> selectTopicIdsByTagId(String id);
 }
