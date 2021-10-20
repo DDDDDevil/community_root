@@ -7,6 +7,7 @@ import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.PostVO;
 
+import java.util.List;
 import java.util.Map;
 
 public interface BmsPostService extends IService<BmsPost> {
@@ -36,4 +37,12 @@ public interface BmsPostService extends IService<BmsPost> {
      * @return
      */
     Map<String, Object> viewTopic(String id);
+
+    /**
+     * 获取随机推荐10篇
+     *
+     * @param id
+     * @return
+     */
+    List<BmsPost> getRecommend(String id);
 }
