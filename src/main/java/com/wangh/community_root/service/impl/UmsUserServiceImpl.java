@@ -2,6 +2,7 @@ package com.wangh.community_root.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wangh.community_root.common.exception.ApiAsserts;
 import com.wangh.community_root.jwt.JwtUtil;
@@ -44,6 +45,8 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
                 .status(true)
                 .build();
         baseMapper.insert(addUser);
+
+        System.out.println(IdWorker.getId());
         return addUser;
     }
 
