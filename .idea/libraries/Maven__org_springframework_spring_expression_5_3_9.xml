@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.springframework:spring-expression:5.3.9">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../maven-jar/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Program Files (x86)/apache-maven-3.8.4/localRepository/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../../maven-jar/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Program Files (x86)/apache-maven-3.8.4/localRepository/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../maven-jar/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Program Files (x86)/apache-maven-3.8.4/localRepository/org/springframework/spring-expression/5.3.9/spring-expression-5.3.9-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

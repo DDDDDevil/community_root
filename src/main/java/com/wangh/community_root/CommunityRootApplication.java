@@ -9,12 +9,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class CommunityRootApplication extends SpringBootServletInitializer {
+public class CommunityRootApplication extends SpringBootServletInitializer{
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(CommunityRootApplication.class);
     }
+
     @Bean
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
