@@ -190,6 +190,28 @@ INSERT INTO `bms_promotion` VALUES (3, '掘金', 'https://juejin.cn/', '掘金')
 
 
 -- ----------------------------
+-- Table structure for bms_avatars
+-- ----------------------------
+DROP TABLE IF EXISTS `bms_avatars`;
+CREATE TABLE `bms_avatars`  (
+                                `id` int NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                `avatar` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '头像地址',
+                                `create_time` datetime NOT NULL default now() COMMENT '发布时间',
+                                PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '头像表' ROW_FORMAT = DYNAMIC;
+
+insert into bms_avatars(id, avatar) values (1,'https://s4.ax1x.com/2022/01/26/7O9GZ9.jpg');
+insert into bms_avatars(id, avatar) values (2,'https://s4.ax1x.com/2022/01/26/7O91r4.jpg');
+insert into bms_avatars(id, avatar) values (3,'https://s4.ax1x.com/2022/01/26/7O93qJ.jpg');
+insert into bms_avatars(id, avatar) values (4,'https://s4.ax1x.com/2022/01/26/7O9lMF.jpg');
+insert into bms_avatars(id, avatar) values (5,'https://s4.ax1x.com/2022/01/26/7O9MxU.jpg');
+insert into bms_avatars(id, avatar) values (6,'https://s4.ax1x.com/2022/01/26/7O9JaR.jpg');
+insert into bms_avatars(id, avatar) values (7,'https://s4.ax1x.com/2022/01/26/7O9YI1.jpg');
+insert into bms_avatars(id, avatar) values (8,'https://s4.ax1x.com/2022/01/26/7O9NPx.jpg');
+insert into bms_avatars(id, avatar) values (9,'https://s4.ax1x.com/2022/01/26/7O9UG6.jpg');
+
+
+-- ----------------------------
 -- Table structure for bms_tip
 -- ----------------------------
 DROP TABLE IF EXISTS `bms_tip`;

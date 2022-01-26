@@ -9,14 +9,17 @@ import com.wangh.community_root.jwt.JwtUtil;
 import com.wangh.community_root.mapper.UmsUserMapper;
 import com.wangh.community_root.model.dto.LoginDTO;
 import com.wangh.community_root.model.dto.RegisterDTO;
+import com.wangh.community_root.model.entity.BmsAvatars;
 import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.ProfileVO;
+import com.wangh.community_root.service.BmsAvatarsService;
 import com.wangh.community_root.service.UmsUserService;
 import com.wangh.community_root.utils.MD5Utils;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -27,6 +30,9 @@ import java.util.Date;
 public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
         implements UmsUserService {
 
+    @Autowired
+    private BmsAvatarsService bmsAvatarsService;
+
     @Override
     public UmsUser userRegister(RegisterDTO registerDTO) {
         LambdaQueryWrapper<UmsUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -36,11 +42,13 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
         if(!ObjectUtils.isEmpty(umsUser)){
             ApiAsserts.fail("账号或邮箱已存在！");
         }
+        BmsAvatars bmsAvatars = bmsAvatarsService.getavatarbyrandom();
         UmsUser addUser = UmsUser.builder()
                 .username(registerDTO.getName())
                 .alias(registerDTO.getName())
                 .password(MD5Utils.getPwd(registerDTO.getPass()))
                 .email(registerDTO.getEmail())
+                .avatar(bmsAvatars.getAvatar())
                 .createTime(new Date())
                 .status(true)
                 .build();

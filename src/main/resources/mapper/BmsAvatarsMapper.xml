@@ -1,0 +1,11 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangh.community_root.mapper.BmsAvatarsMapper">
+    <select id="getavatarbyrandom" resultType="com.wangh.community_root.model.entity.BmsAvatars">
+        SELECT *
+        FROM bms_avatars
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+</mapper>
