@@ -6,12 +6,13 @@
         <result column="content" property="content"/>
         <result column="user_id" property="userId"/>
         <result column="topic_id" property="topicId"/>
+        <result column="avatar" property="avatar"/>
         <result column="username" property="username"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
 
     <select id="getCommentsByTopicID" resultMap="topicVO">
-        select bms_comment.*,ums_user.username
+        select bms_comment.*,ums_user.username,ums_user.avatar
         from bms_comment
                  join ums_user on ums_user.id = bms_comment.user_id
         where topic_id = #{topicid}

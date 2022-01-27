@@ -4,7 +4,6 @@ import com.wangh.community_root.model.entity.BmsTag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
