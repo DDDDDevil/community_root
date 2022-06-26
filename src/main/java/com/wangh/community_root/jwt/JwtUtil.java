@@ -3,10 +3,12 @@ package com.wangh.community_root.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.security.Key;
 import java.util.*;
 
 
@@ -14,10 +16,11 @@ public class JwtUtil {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     // 设置加密时间为1000个小时
     public static final long EXPIRATION_TIME = 3600_000_000L; // 1000 hour
-    public static final String SECRET = "ThisIsASecret";//please change to your own encryption secret.
+//    public static final String SECRET = "ThisIsASecret";//please change to your own encryption secret.
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String USER_NAME = "userName";
+    public static final Key key = getPrivateKey();
 
     public static String generateToken(String userId) {
         HashMap<String, Object> map = new HashMap<>();
@@ -26,7 +29,7 @@ public class JwtUtil {
         String jwt = Jwts.builder()
                 .setClaims(map)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(key)
                 .compact();
         return jwt; //jwt前面一般都会加Bearer
     }
@@ -36,9 +39,10 @@ public class JwtUtil {
         if (token != null) {
             // parse the token.
             try {
-                Map<String, Object> body = Jwts.parser()
-                        .setSigningKey(SECRET)
-                        .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                Map<String, Object> body = Jwts.parserBuilder()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(token)
                         .getBody();
                 return new CustomHttpServletRequest(request, body);
             } catch (Exception e) {
@@ -73,5 +77,9 @@ public class JwtUtil {
         public TokenValidationException(String msg) {
             super(msg);
         }
+    }
+
+    private static Key getPrivateKey(){
+        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 }
