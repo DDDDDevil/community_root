@@ -1,15 +1,16 @@
 package com.wangh.community_root.model.entity;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.wangh.community_root.utils.UUIdGenId;
 import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
-@TableName("bms_follow")
+@Table(name = "bms_follow")
 public class BmsFollow implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,19 +18,19 @@ public class BmsFollow implements Serializable {
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
+    @Id
+    @KeySql(genId = UUIdGenId.class)
+    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "jdbc")
     private Integer id;
 
     /**
      * 被关注人id
      */
-    @TableField("parent_id")
     private String parentId;
 
     /**
      * 关注人id
      */
-    @TableField("follower_id")
     private String followerId;
 
     public BmsFollow() {

@@ -1,7 +1,5 @@
 package com.wangh.community_root.controller;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wangh.community_root.common.api.ApiResult;
 import com.wangh.community_root.model.entity.BmsBillboard;
 import com.wangh.community_root.service.BmsBillboardService;
@@ -21,8 +19,7 @@ public class BmsBillboardController extends BaseController {
 
     @GetMapping("/showBillboard")
     public ApiResult<BmsBillboard> getBillboard(){
-        List<BmsBillboard> list = bmsBillboardService.list(new
-                LambdaQueryWrapper<BmsBillboard>().eq(BmsBillboard::isShow,true));
-        return ApiResult.success(list.get(list.size()- 1));
+        List<BmsBillboard> billboards = bmsBillboardService.listBillboard();
+        return ApiResult.success(billboards.get(billboards.size()- 1));
     }
 }

@@ -1,11 +1,17 @@
 package com.wangh.community_root.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.wangh.community_root.utils.UUIdGenId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import tk.mybatis.mapper.annotation.KeySql;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
@@ -13,33 +19,31 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("bms_tip")
-
+@Table(name = "bms_tip")
 public class BmsTip implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
+    @Id
+    @KeySql(genId = UUIdGenId.class)
+    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "jdbc")
     private Integer id;
 
     /**
      * 内容
      */
-    @TableField("content")
     private String content;
 
     /**
      * 作者
      */
-    @TableField("author")
     private String author;
 
     /**
      * 1：使用，0：过期
      */
     @Builder.Default
-    @TableField("`type`")
     private boolean type = false;
 }

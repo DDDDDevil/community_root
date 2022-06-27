@@ -1,8 +1,5 @@
 package com.wangh.community_root.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wangh.community_root.common.exception.ApiAsserts;
 import com.wangh.community_root.jwt.JwtUtil;
 import com.wangh.community_root.mapper.UmsUserMapper;
@@ -19,23 +16,27 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 
 @Slf4j
 @Service
-public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
-        implements UmsUserService {
+public class UmsUserServiceImpl implements UmsUserService {
+
+    @Autowired
+    private UmsUserMapper umsUserMapper;
 
     @Autowired
     private BmsAvatarsService bmsAvatarsService;
 
     @Override
     public UmsUser userRegister(RegisterDTO registerDTO) {
-        LambdaQueryWrapper<UmsUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(UmsUser::getUsername, registerDTO.getName()).or()
-                .eq(UmsUser::getEmail, registerDTO.getEmail());
-        UmsUser umsUser = this.baseMapper.selectOne(lambdaQueryWrapper);
+        Example example = new Example(UmsUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username", registerDTO.getName());
+        criteria.orEqualTo("mail", registerDTO.getEmail());
+        UmsUser umsUser = umsUserMapper.selectOneByExample(criteria);
         if(!ObjectUtils.isEmpty(umsUser)){
             ApiAsserts.fail("账号或邮箱已存在！");
         }
@@ -49,9 +50,7 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
                 .createTime(new Date())
                 .status(true)
                 .build();
-        baseMapper.insert(addUser);
-
-        System.out.println(IdWorker.getId());
+        umsUserMapper.insert(addUser);
         return addUser;
     }
 
@@ -73,16 +72,17 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser>
 
     @Override
     public UmsUser getUserByUsername(String username) {
-        UmsUser user = this.baseMapper.selectOne(
-                new LambdaQueryWrapper<UmsUser>().eq(UmsUser::getUsername, username)
-        );
+        Example example = new Example(UmsUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username", username);
+        UmsUser user = umsUserMapper.selectOneByExample(example);
         return user;
     }
 
     @Override
     public ProfileVO getUserProfile(String id) {
         ProfileVO profile = new ProfileVO();
-        UmsUser user = baseMapper.selectById(id);
+        UmsUser user = umsUserMapper.selectByPrimaryKey(id);
         BeanUtils.copyProperties(user, profile);
 //        // 用户文章数
 //        int count = bmsTopicMapper.selectCount(new LambdaQueryWrapper<BmsPost>().eq(BmsPost::getUserId, id));

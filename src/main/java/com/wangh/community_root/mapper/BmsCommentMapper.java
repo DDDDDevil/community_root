@@ -1,16 +1,15 @@
 package com.wangh.community_root.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wangh.community_root.model.entity.BmsComment;
 import com.wangh.community_root.model.vo.CommentVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
 
-@Repository
-public interface BmsCommentMapper extends BaseMapper<BmsComment> {
+public interface BmsCommentMapper extends Mapper<BmsComment> {
 
     /**
      * getCommentsByTopicID

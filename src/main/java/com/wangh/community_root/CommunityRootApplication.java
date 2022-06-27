@@ -7,7 +7,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import tk.mybatis.spring.annotation.MapperScan;
 
+@MapperScan("com.wangh.community_root.mapper")
 @SpringBootApplication
 public class CommunityRootApplication extends SpringBootServletInitializer{
 

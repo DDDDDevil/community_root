@@ -28,7 +28,7 @@ public class JwtUtil {
         map.put(USER_NAME, userId);
         String jwt = Jwts.builder()
                 .setClaims(map)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+//                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
         return jwt; //jwt前面一般都会加Bearer

@@ -1,10 +1,10 @@
 package com.wangh.community_root.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wangh.community_root.model.entity.BmsFollow;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.common.Mapper;
 
-@Mapper
-public interface BmsFollowMapper extends BaseMapper<BmsFollow> {
+
+public interface BmsFollowMapper extends Mapper<BmsFollow> {
 }
