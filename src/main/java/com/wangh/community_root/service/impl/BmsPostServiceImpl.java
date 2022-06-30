@@ -1,15 +1,10 @@
 package com.wangh.community_root.service.impl;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.vdurmont.emoji.EmojiParser;
-import com.wangh.community_root.mapper.BmsTagMapper;
-import com.wangh.community_root.mapper.BmsTopicMapper;
-import com.wangh.community_root.mapper.UmsUserMapper;
+import com.wangh.community_root.mapper.*;
 import com.wangh.community_root.model.dto.CreateTopicDTO;
 import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.BmsTag;
@@ -25,15 +20,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> implements BmsPostService {
+public class BmsPostServiceImpl implements BmsPostService {
 
     @Autowired
     private BmsTopicTagService bmsTopicTagService;
+
+    @Autowired
+    private BmsTopicTagMapper bmsTopicTagMapper;
+
+    @Autowired
+    private BmsTopicMapper bmsTopicMapper;
 
     @Autowired
     private UmsUserMapper umsUserMapper;
@@ -47,19 +50,48 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
     @Autowired
     private BmsTagMapper bmsTagMapper;
 
+    @Autowired
+    private BmsPostMapper bmsPostMapper;
+
     @Override
-    public Page<PostVO> getList(Page<PostVO> page, String tab) {
+    public void deletePost(String userName, String id) {
+        UmsUser umsUser = umsUserService.getUserByUsername(userName);
+        BmsPost byId = bmsPostMapper.selectByPrimaryKey(id);
+        Assert.notNull(byId, "来晚一步，话题已不存在");
+        Assert.isTrue(byId.getUserId().equals(umsUser.getId()), "你为什么可以删除别人的话题？？？");
+        bmsPostMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void updatePost(String userName, BmsPost post) {
+        UmsUser umsUser = umsUserService.getUserByUsername(userName);
+        Assert.isTrue(umsUser.getId().equals(post.getUserId()), "非本人无权修改");
+        post.setModifyTime(new Date());
+        post.setContent(EmojiParser.parseToAliases(post.getContent()));
+    }
+
+    @Override
+    public PageInfo<PostVO> getList(Integer pageNo, Integer pageSize, String tab) {
         // 查询话题
-        Page<PostVO> iPage = this.baseMapper.selectListAndPage(page, tab);
+        PageInfo<PostVO> iPage = PageHelper.startPage(pageNo,pageSize).doSelectPageInfo(()->bmsTopicMapper.selectListAndPage(tab));
         // 查询话题的标签
         setTopicTags(iPage);
         return iPage;
     }
 
+    /**
+     * 创建话题
+     * @param dto
+     * @param user
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BmsPost create(CreateTopicDTO dto, UmsUser user) {
-        BmsPost topic1 = this.baseMapper.selectOne(new LambdaQueryWrapper<BmsPost>().eq(BmsPost::getTitle, dto.getTitle()));
+        Example example = new Example(BmsPost.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("title",dto.getTitle());
+        BmsPost topic1 = bmsTopicMapper.selectOneByExample(example);
         Assert.isNull(topic1, "话题已存在，请修改");
 
         // 封装
@@ -69,11 +101,11 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
                 .content(EmojiParser.parseToAliases(dto.getContent()))
                 .createTime(new Date())
                 .build();
-        this.baseMapper.insert(topic);
+        bmsTopicMapper.insert(topic);
 
         // 用户积分增加
         int newScore = user.getScore() + 1;
-        umsUserMapper.updateById(user.setScore(newScore));
+        umsUserMapper.updateByPrimaryKey(user.setScore(newScore));
 
         // 标签
         if (!ObjectUtils.isEmpty(dto.getTags())) {
@@ -89,22 +121,26 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
     @Override
     public Map<String, Object> viewTopic(String id) {
         Map<String, Object> map = new HashMap<>(16);
-        BmsPost topic = this.baseMapper.selectById(id);
+        BmsPost topic = bmsTopicMapper.selectByPrimaryKey(id);
         Assert.notNull(topic, "当前话题不存在,或已被作者删除");
         // 查询话题详情
         topic.setView(topic.getView() + 1);
-        this.baseMapper.updateById(topic);
+        bmsTopicMapper.updateByPrimaryKey(topic);
         // emoji转码
         topic.setContent(EmojiParser.parseToUnicode(topic.getContent()));
         map.put("topic", topic);
         // 标签
-        QueryWrapper<BmsTopicTag> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(BmsTopicTag::getTopicId, topic.getId());
+        Example example = new Example(BmsTopicTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("topicId",topic.getId());
         Set<String> set = new HashSet<>();
-        for (BmsTopicTag articleTag : bmsTopicTagService.list(wrapper)) {
+        for (BmsTopicTag articleTag : bmsTopicTagMapper.selectByExample(example)) {
             set.add(articleTag.getTagId());
         }
-        List<BmsTag> tags = bmsTagService.listByIds(set);
+        Example example1 = new Example(BmsTag.class);
+        Example.Criteria criteria1 = example1.createCriteria();
+        criteria1.andIn("id", set);
+        List<BmsTag> tags = bmsTagMapper.selectByExample(example1);
         map.put("tags", tags);
 
         // 作者
@@ -115,12 +151,15 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
         return map;
     }
 
-    private void setTopicTags(Page<PostVO> iPage) {
-        iPage.getRecords().forEach(topic -> {
+    private void setTopicTags(PageInfo<PostVO> iPage) {
+        iPage.getList().forEach(topic -> {
             List<BmsTopicTag> topicTags = bmsTopicTagService.selectByTopicId(topic.getId());
             if (!topicTags.isEmpty()) {
                 List<String> tagIds = topicTags.stream().map(BmsTopicTag::getTagId).collect(Collectors.toList());
-                List<BmsTag> tags = bmsTagMapper.selectBatchIds(tagIds);
+                Example example = new Example(BmsTag.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andIn("id",tagIds);
+                List<BmsTag> tags = bmsTagMapper.selectByExample(example);
                 topic.setTags(tags);
             }
         });
@@ -128,13 +167,13 @@ public class BmsPostServiceImpl extends ServiceImpl<BmsTopicMapper, BmsPost> imp
 
     @Override
     public List<BmsPost> getRecommend(String id) {
-        return this.baseMapper.selectRecommend(id);
+        return bmsTopicMapper.selectRecommend(id);
     }
 
     @Override
-    public Page<PostVO> searchByKey(String keyword, Page<PostVO> page) {
+    public PageInfo<PostVO> searchByKey(String keyword, Integer pageNum, Integer pageSize) {
         // 查询话题
-        Page<PostVO> iPage = this.baseMapper.searchByKey(page, keyword);
+        PageInfo<PostVO> iPage = PageHelper.startPage(pageNum,pageSize).doSelectPageInfo(() -> bmsTopicMapper.searchByKey(keyword));
         // 查询话题的标签
         setTopicTags(iPage);
         return iPage;

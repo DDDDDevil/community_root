@@ -1,25 +1,30 @@
 package com.wangh.community_root.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.wangh.community_root.model.dto.CreateTopicDTO;
 import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.PostVO;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-public interface BmsPostService extends IService<BmsPost> {
+public interface BmsPostService {
+
+    void deletePost(String userName, String id);
+
+    void updatePost(String userName, BmsPost post);
 
     /**
      * 获取首页话题列表
-     *
-     * @param page
+     * @param pageNo
+     * @param pageSize
      * @param tab
      * @return
      */
-    Page<PostVO> getList(Page<PostVO> page, String tab);
+    PageInfo<PostVO> getList(Integer pageNo, Integer pageSize, String tab);
 
     /**
      * 发布
@@ -53,5 +58,5 @@ public interface BmsPostService extends IService<BmsPost> {
      * @param page
      * @return
      */
-    Page<PostVO> searchByKey(String keyword, Page<PostVO> page);
+    PageInfo<PostVO> searchByKey(String keyword, Integer pageNum, Integer pageSize);
 }

@@ -1,12 +1,11 @@
 package com.wangh.community_root.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangh.community_root.model.dto.LoginDTO;
 import com.wangh.community_root.model.dto.RegisterDTO;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.model.vo.ProfileVO;
 
-public interface UmsUserService extends IService<UmsUser> {
+public interface UmsUserService {
 
     /**
      * 注册用户

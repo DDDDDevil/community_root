@@ -1,7 +1,14 @@
 package com.wangh.community_root.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangh.community_root.model.entity.BmsFollow;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-public interface BmsFollowService extends IService<BmsFollow> {
+import static com.wangh.community_root.jwt.JwtUtil.USER_NAME;
+
+public interface BmsFollowService {
+
+    void handleFollow(String userName ,String parentId);
+
+    void handleUnFollow(String userName ,String parentId);
 }

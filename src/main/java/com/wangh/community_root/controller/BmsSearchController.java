@@ -1,6 +1,6 @@
 package com.wangh.community_root.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageInfo;
 import com.wangh.community_root.common.api.ApiResult;
 import com.wangh.community_root.model.vo.PostVO;
 import com.wangh.community_root.service.BmsPostService;
@@ -19,10 +19,10 @@ public class BmsSearchController extends BaseController {
     private BmsPostService postService;
 
     @GetMapping
-    public ApiResult<Page<PostVO>> searchList(@RequestParam("keyword") String keyword,
-                                              @RequestParam("pageNum") Integer pageNum,
-                                              @RequestParam("pageSize") Integer pageSize) {
-        Page<PostVO> results = postService.searchByKey(keyword, new Page<>(pageNum, pageSize));
+    public ApiResult<PageInfo<PostVO>> searchList(@RequestParam("keyword") String keyword,
+                                                  @RequestParam("pageNum") Integer pageNum,
+                                                  @RequestParam("pageSize") Integer pageSize) {
+        PageInfo<PostVO> results = postService.searchByKey(keyword, pageNum, pageSize );
         return ApiResult.success(results);
     }
 

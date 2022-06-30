@@ -1,25 +1,24 @@
 package com.wangh.community_root.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import com.github.pagehelper.PageInfo;
 import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.vo.PostVO;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
+import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 
-@Mapper
-public interface BmsTopicMapper extends BaseMapper<BmsPost> {
+
+public interface BmsTopicMapper extends Mapper<BmsPost> {
     /**
      * 分页查询首页话题列表
      * <p>
      *
-     * @param page
+     * @param tab
      * @param tab
      * @return
      */
-    Page<PostVO> selectListAndPage(@Param("page") Page<PostVO> page, @Param("tab") String tab);
+    List<PostVO> selectListAndPage(@Param("tab") String tab);
 
     /**
      * 获取详情页推荐
@@ -32,9 +31,8 @@ public interface BmsTopicMapper extends BaseMapper<BmsPost> {
     /**
      * 全文检索
      *
-     * @param page
      * @param keyword
      * @return
      */
-    Page<PostVO> searchByKey(@Param("page") Page<PostVO> page, @Param("keyword") String keyword);
+    PageInfo<PostVO> searchByKey(@Param("keyword") String keyword);
 }

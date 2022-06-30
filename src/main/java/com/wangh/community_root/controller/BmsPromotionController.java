@@ -19,7 +19,7 @@ public class BmsPromotionController {
 
     @GetMapping("/showPromotion")
     public ApiResult<List<BmsPromotion>> getPromotion(){
-        List<BmsPromotion> bmsPromotionList = bmsPromotionService.list();
+        List<BmsPromotion> bmsPromotionList = bmsPromotionService.listPromotion();
         return ApiResult.success(bmsPromotionList);
     }
 }

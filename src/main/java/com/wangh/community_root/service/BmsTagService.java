@@ -1,13 +1,12 @@
 package com.wangh.community_root.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.wangh.community_root.model.entity.BmsPost;
 import com.wangh.community_root.model.entity.BmsTag;
-
 import java.util.List;
+import java.util.Map;
 
-public interface BmsTagService extends IService<BmsTag> {
+public interface BmsTagService {
     /**
      * 插入标签
      *
@@ -15,12 +14,23 @@ public interface BmsTagService extends IService<BmsTag> {
      * @return
      */
     List<BmsTag> insertTags(List<String> tags);
+
     /**
      * 获取标签关联话题
-     *
-     * @param topicPage
+     * @param pageNum
+     * @param pageSize
      * @param id
      * @return
      */
-    Page<BmsPost> selectTopicsByTagId(Page<BmsPost> topicPage, String id);
+    PageInfo<BmsPost> selectTopicsByTagId(Integer pageNum, Integer pageSize, String id);
+
+    /**
+     * 获取指定tag关联的所有话题
+     * @param pageNum
+     * @param pageSize
+     * @param tagName
+     * @return
+     */
+    Map<String, Object> getTopicsByTag(Integer pageNum, Integer pageSize, String tagName);
+
 }

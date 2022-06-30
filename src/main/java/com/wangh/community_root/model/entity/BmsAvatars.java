@@ -1,26 +1,20 @@
 package com.wangh.community_root.model.entity;
 
+
 import com.wangh.community_root.utils.UUIdGenId;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
+import java.util.Date;
 
 @Data
-@Builder
-@Accessors(chain = true)
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "bms_tip")
-public class BmsTip implements Serializable {
+@Table(name = "bms_avatars")
+public class BmsAvatars {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -32,18 +26,13 @@ public class BmsTip implements Serializable {
     private Integer id;
 
     /**
-     * 内容
+     * 头像地址
      */
-    private String content;
+    private String avatar;
 
     /**
-     * 作者
+     * 创建时间
      */
-    private String author;
+    private Date createTime;
 
-    /**
-     * 1：使用，0：过期
-     */
-    @Builder.Default
-    private boolean type = false;
 }

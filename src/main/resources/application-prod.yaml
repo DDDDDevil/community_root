@@ -1,5 +1,5 @@
 server:
-  port: 8088
+  port: 5227
 
 web:
   domain: http://localhost
@@ -12,7 +12,9 @@ spring:
     url: jdbc:mysql://localhost:3306/community?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=GMT%2B8
     type: com.zaxxer.hikari.HikariDataSource
 
-logging:
-  level:
-    root: info
-    com.douyuehan.doubao: info
+mybatis:
+  #包扫描
+  mapper-locations: classpath:mapper/*Mapper.xml
+  #开启映射，就是驼峰命名按照规则把查询结果对应到实体类（数据库的user_name=实体类接收的userName）
+  configuration:
+    map-underscore-to-camel-case: true
