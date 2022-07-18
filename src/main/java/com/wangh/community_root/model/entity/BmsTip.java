@@ -29,7 +29,7 @@ public class BmsTip implements Serializable {
     @Id
     @KeySql(genId = UUIdGenId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "jdbc")
-    private Integer id;
+    private String id;
 
     /**
      * 内容

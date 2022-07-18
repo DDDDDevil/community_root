@@ -77,7 +77,7 @@ public class BmsTagServiceImpl implements BmsTagService {
         PageInfo<BmsPost> topics = selectTopicsByTagId(pageNum, pageSize, tag.getId());
         // 其他热门标签
         Example exampleHot = new Example(BmsTag.class);
-        exampleHot.setOrderByClause("topicCount");
+        exampleHot.setOrderByClause("topic_count");
         Example.Criteria criteriaHot = exampleHot.createCriteria();
         criteriaHot.andEqualTo("name", tagName);
         PageInfo<BmsTag> hotTags = PageHelper.startPage(1,10).doSelectPageInfo(() -> bmsTagMapper.selectByExample(exampleHot));

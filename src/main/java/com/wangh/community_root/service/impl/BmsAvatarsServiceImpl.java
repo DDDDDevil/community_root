@@ -18,7 +18,7 @@ public class BmsAvatarsServiceImpl implements BmsAvatarsService {
     public BmsAvatars getavatarbyrandom() {
         BmsAvatars bmsAvatars = null;
         try{
-            bmsAvatars = this.bmsAvatarsMapper.getavatarbyrandom();
+            bmsAvatars = this.bmsAvatarsMapper.gestational();
         }catch (Exception e){
             e.printStackTrace();
             log.error(e.toString());

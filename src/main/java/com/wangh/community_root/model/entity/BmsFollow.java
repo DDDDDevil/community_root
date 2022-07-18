@@ -21,7 +21,7 @@ public class BmsFollow implements Serializable {
     @Id
     @KeySql(genId = UUIdGenId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "jdbc")
-    private Integer id;
+    private String id;
 
     /**
      * 被关注人id
@@ -32,8 +32,5 @@ public class BmsFollow implements Serializable {
      * 关注人id
      */
     private String followerId;
-
-    public BmsFollow() {
-    }
 
 }

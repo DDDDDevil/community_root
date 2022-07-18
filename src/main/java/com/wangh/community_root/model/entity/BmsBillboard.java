@@ -31,7 +31,7 @@ public class BmsBillboard implements Serializable {
     @Id
     @KeySql(genId = UUIdGenId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "jdbc")
-    private Integer id;
+    private String id;
 
     /**
      * 公告牌
