@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import tk.mybatis.mapper.annotation.KeySql;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,15 +38,13 @@ public class UmsUser implements Serializable {
     @JsonIgnore()
     private String password;
 
-    @Builder.Default
-    private String avatar = "https://s3.ax1x.com/2020/12/01/DfHNo4.jpg";
+    private String avatar;
 
     private String email;
 
     private String mobile;
 
-    @Builder.Default
-    private String bio = "自由职业者";
+    private String bio;
 
     @Builder.Default
     private Integer score = 0;
@@ -72,4 +69,12 @@ public class UmsUser implements Serializable {
     private Date createTime;
 
     private Date modifyTime;
+
+    // 文章数
+    @Builder.Default
+    private Integer topicCount = 0;
+
+    // 粉丝数
+    @Builder.Default
+    private Integer followerCount = 0;
 }

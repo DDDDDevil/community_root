@@ -30,8 +30,11 @@ public class BmsFollowController extends BaseController {
     @GetMapping("/subscribe/{userId}")
     public ApiResult<Object> handleFollow(@RequestHeader(value = USER_NAME) String userName
             , @PathVariable("userId") String parentId) {
-
-        bmsFollowService.handleFollow(userName,parentId);
+        UmsUser umsUser = umsUserService.getUserByUsername(userName);
+        if (parentId.equals(umsUser.getId())) {
+            return ApiResult.success(null, "无法关注自己");
+        }
+        bmsFollowService.handleFollow(userName,parentId,umsUser);
         return ApiResult.success(null, "关注成功");
     }
 

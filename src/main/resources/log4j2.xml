@@ -126,7 +126,7 @@
 <!--            <AppenderRef ref="Console"/>-->
 <!--        </Logger>-->
         <!--建立一个默认的root的logger-->
-        <Root level="DEBUG">
+        <Root level="info">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="InfoFile"/>
             <AppenderRef ref="WarnFile"/>

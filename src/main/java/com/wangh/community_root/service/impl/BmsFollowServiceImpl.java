@@ -3,6 +3,7 @@ package com.wangh.community_root.service.impl;
 import com.wangh.community_root.common.api.ApiResult;
 import com.wangh.community_root.common.exception.ApiAsserts;
 import com.wangh.community_root.mapper.BmsFollowMapper;
+import com.wangh.community_root.mapper.UmsUserMapper;
 import com.wangh.community_root.model.entity.BmsFollow;
 import com.wangh.community_root.model.entity.UmsUser;
 import com.wangh.community_root.service.BmsFollowService;
@@ -25,13 +26,11 @@ public class BmsFollowServiceImpl implements BmsFollowService {
     @Autowired
     private BmsFollowMapper bmsFollowMapper;
 
-    @Override
-    public void handleFollow(String userName, String parentId) {
-        UmsUser umsUser = umsUserService.getUserByUsername(userName);
-        if (parentId.equals(umsUser.getId())) {
-            ApiAsserts.fail("您脸皮太厚了，怎么可以关注自己呢");
-        }
+    @Autowired
+    private UmsUserMapper umsUserMapper;
 
+    @Override
+    public void handleFollow(String userName, String parentId, UmsUser umsUser) {
         Example example = new Example(BmsFollow.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("parentId",parentId);
@@ -46,6 +45,10 @@ public class BmsFollowServiceImpl implements BmsFollowService {
         follow.setParentId(parentId);
         follow.setFollowerId(umsUser.getId());
         bmsFollowMapper.insert(follow);
+
+        // 粉丝数+1
+        umsUser.setFollowerCount(umsUser.getFollowerCount()+1);
+        umsUserMapper.updateByPrimaryKey(umsUser);
     }
 
     @Override
@@ -61,6 +64,10 @@ public class BmsFollowServiceImpl implements BmsFollowService {
             ApiAsserts.fail("未关注！");
         }
         bmsFollowMapper.deleteByExample(example);
+
+        // 粉丝数-1
+        umsUser.setFollowerCount(umsUser.getFollowerCount()-1);
+        umsUserMapper.updateByPrimaryKey(umsUser);
     }
 
     @Override
